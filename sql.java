@@ -3,8 +3,11 @@ package com.myapp.myapplication;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.preference.PreferenceManager;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,6 +19,29 @@ import java.util.Locale;
 public class sql extends SQLiteOpenHelper {
 
     Context context;
+
+    public static void setData(String Key,String value,Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor edit = preferences.edit();
+        edit.putString(Key,value);
+        edit.commit();
+    }
+
+    public static String getData(String key,Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        if(key.equals("User_name"))
+            return preferences.getString("User_name",null);
+        else
+            return preferences.getString("u_id",null);
+    }
+
+    public static void delete_data(Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor edit = preferences.edit();
+        edit.clear();
+        edit.commit();
+    }
+
 
     public sql(Context context) {
         super(context, "database.db", null, 1);
