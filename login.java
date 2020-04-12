@@ -37,14 +37,13 @@ public class login extends AppCompatActivity {
         b1.setOnClickListener((v) -> {
             String user = t1.getText().toString();
             String pass = t2.getText().toString();
-            if(user.equals("") || pass.equals(""))
-            {
+            if(user.equals("") || pass.equals("")) {
                 new sql(this).show("Error","Username or password is empty","Ok");
             }
             else
             {
                 Background bg = new Background(this);
-                String url = "http://192.168.1.3/login.php";
+                String url = "http://192.168.1.8/login.php";
                 bg.execute(user, pass, url);
                 bg.setUser_name(user);
             }

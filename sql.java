@@ -1,12 +1,24 @@
 package com.myapp.myapplication;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Typeface;
 import android.preference.PreferenceManager;
+import android.renderscript.ScriptGroup;
+import android.text.InputType;
+import android.view.Display;
+import android.view.Gravity;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -41,7 +53,6 @@ public class sql extends SQLiteOpenHelper {
         edit.clear();
         edit.commit();
     }
-
 
     public sql(Context context) {
         super(context, "database.db", null, 1);
@@ -101,6 +112,7 @@ public class sql extends SQLiteOpenHelper {
             else
                 b = false;
         } catch (ParseException e) {
+            b = false;
             e.printStackTrace();
         }
         return b;
@@ -111,5 +123,68 @@ public class sql extends SQLiteOpenHelper {
         dialog = b.create();
         dialog.show();
         return dialog;
+    }
+
+
+    public android.support.v7.app.AlertDialog edit_texts(){
+        String user = getData("u_id",context);
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        String st_date = start_date().getText().toString();
+        String e_date = end_date().getText().toString();
+        layout.addView(s_Date());
+        layout.addView(start_date());
+        layout.addView(e_Date());
+        layout.addView(end_date());
+        android.support.v7.app.AlertDialog.Builder alert = new android.support.v7.app.AlertDialog.Builder(context);
+        alert.setTitle("Enter the Date")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        System.out.println("Star Date:"+st_date);
+                        System.out.println("Star Date:"+e_date);
+                        new Getjsonarray(context).execute(st_date,e_date,user);
+                        ((Activity)context).finish();
+                    }
+                })
+                .setNegativeButton("Cancel", null);
+        android.support.v7.app.AlertDialog al = alert.create();
+        al.setView(layout);
+        al.show();
+        return al;
+    }
+
+    public EditText start_date(){
+        EditText st = new EditText(context);
+        st.setGravity(Gravity.CENTER);
+        st.setTextSize(20);
+        st.setInputType(InputType.TYPE_CLASS_DATETIME);
+        st.setHint("DD-MM-YYYY");
+        return st;
+    }
+
+    public EditText end_date(){
+        EditText ed = new EditText(context);
+        ed.setGravity(Gravity.CENTER);
+        ed.setTextSize(20);
+        ed.setInputType(InputType.TYPE_CLASS_DATETIME);
+        ed.setHint("DD-MM-YYYY");
+        return ed;
+    }
+
+    public TextView s_Date(){
+        TextView t = new TextView(context);
+        t.setText("Start Date");
+        t.setTextSize(20);
+        t.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        return t;
+    }
+
+    public TextView e_Date(){
+        TextView t1 = new TextView(context);
+        t1.setText("End Date");
+        t1.setTextSize(20);
+        t1.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        return t1;
     }
 }

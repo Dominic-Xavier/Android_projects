@@ -28,17 +28,18 @@ public class popup extends Activity {
     }
     public void save(View v)
     {
-        Database d = new Database();
-        String user = d.getUser();
+        String user = sql.getData("u_id",this);
         Boolean b = null;
         EditText et = (EditText)findViewById(R.id.start);
         EditText et1 = (EditText)findViewById(R.id.end);
-        System.out.println("User_id:"+user);
         try {
             String sdate = et.getText().toString();
             String edate = et1.getText().toString();
             sql s = new sql(this);
-            if(b=s.validformat(sdate) && s.validformat(edate))
+            if(sdate.equals("") || sdate.equals(null)|| edate.equals("") || edate.equals(null)){
+                new sql(this).show("Error","Starting date or Ending is blank","Ok");
+            }
+            if(s.validformat(sdate) && s.validformat(edate) && sdate!=null && edate!=null)
                 b=true;
             else
                 b=false;
@@ -51,7 +52,11 @@ public class popup extends Activity {
                 }
             }
 
-        } catch (Exception e) {
+        }
+        catch (NullPointerException n){
+            new sql(this).show("Sorry","Please Enter some data","Ok");
+        }
+        catch (Exception e) {
            new sql(this).show("Error",e.getMessage(),"OK");
         }
     }

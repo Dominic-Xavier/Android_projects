@@ -3,6 +3,7 @@ package com.myapp.myapplication;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
@@ -52,11 +53,11 @@ public class Background extends AsyncTask <String, Void,String> {
 
         try {
 
-                if(connstr.equals("http://192.168.1.3/login.php"))
+                if(connstr.equals("http://192.168.1.8/login.php"))
                 {
                     u = connstr;
                 }
-                else if(connstr.equals("http://192.168.1.4/register.php"))
+                else if(connstr.equals("http://192.168.1.8/register.php"))
                 {
                     u = connstr;
                 }
@@ -105,12 +106,12 @@ public class Background extends AsyncTask <String, Void,String> {
             String user = getUser_name();
             Intent intent_name = new Intent();
             intent_name.setClass(context.getApplicationContext(),Database.class);
-            intent_name.putExtra("User",user);
-            intent_name.putExtra("user_id",s);
+            sql.setData("u_id",s,context);
+            sql.setData("User_name",user,context);
             context.startActivity(intent_name);
             ((Activity)context).finish();
         }
-        else if(s.equals("Success")) {
+        else if(s.equals("Registered Successfully")) {
             Intent intent_name = new Intent();
             intent_name.setClass(context.getApplicationContext(),login.class);
             context.startActivity(intent_name);
@@ -120,5 +121,5 @@ public class Background extends AsyncTask <String, Void,String> {
         else {
             new sql(context).show("Error",s,"Ok");
         }
-        }
     }
+}

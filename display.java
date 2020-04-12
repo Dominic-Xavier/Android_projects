@@ -1,9 +1,6 @@
 package com.myapp.myapplication;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -11,25 +8,10 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.ParseError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
-
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class display extends AppCompatActivity {
 
@@ -41,8 +23,8 @@ public class display extends AppCompatActivity {
         Intent in = getIntent();
         String data = in.getStringExtra("Jsondata");
 
-        TableLayout t1 = (TableLayout) findViewById(R.id.tbl);
-        Button close = (Button)findViewById(R.id.cl);
+        TableLayout t1 = findViewById(R.id.tbl);
+        Button close = findViewById(R.id.cl);
         t1.setColumnStretchable(0, true);
         t1.setColumnStretchable(1, true);
         t1.setColumnStretchable(2, true);
@@ -59,7 +41,7 @@ public class display extends AppCompatActivity {
                 for (String i : col_name) {
                     row.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
                             TableLayout.LayoutParams.WRAP_CONTENT));
-                    TextView tv = new TextView(getApplicationContext());
+                    TextView tv = new TextView(this);
                     tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
                             TableRow.LayoutParams.WRAP_CONTENT));
                     tv.setGravity(Gravity.CENTER);
@@ -149,20 +131,10 @@ public class display extends AppCompatActivity {
 
         close.setOnClickListener((v) -> {
             if (v.getId() == R.id.cl) {
-                Intent intent = new Intent(getApplicationContext(), Database.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                intent.fillIn()
-
+                startActivity(new Intent(display.this,Database.class));
+                finish();
             }
         });
-
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     public void onBackPressed() {
@@ -174,7 +146,7 @@ public class display extends AppCompatActivity {
         return new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                TableLayout t1 = (TableLayout) findViewById(R.id.tbl_lay);
+                TableLayout t1 = (TableLayout) findViewById(R.id.tbl);
                 Button close = (Button) findViewById(R.id.cl);
                     try {
                         for (int k = 0; k < response.length(); k++) {
