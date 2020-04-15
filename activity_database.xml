@@ -11,35 +11,57 @@
     tools:layout_editor_absoluteY="81dp">
 
     <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/user_name"
+        <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Name:"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:layout_width="30dp"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="195dp"
+                    android:layout_height="wrap_content"
+                    android:text="Name:"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </TableRow>
+
+
+        </TableLayout>
+
 
         <TableLayout
             android:id="@+id/tbl"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="558dp"
             android:stretchColumns="*">
 
             <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_width="309dp"
+                android:layout_height="39dp">
 
                 <TextView
                     android:id="@+id/date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:text="Date:"
                     android:textSize="20sp"
                     android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/profile_pic"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/round_image"
+                    app:srcCompat="@drawable/ic_launcher_foreground"
+                    tools:ignore="VectorDrawableCompat" />
 
             </TableRow>
 
@@ -48,7 +70,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="127dp"
                     android:layout_height="wrap_content"
                     android:text="Description"
                     android:textAlignment="center"
@@ -65,16 +87,17 @@
 
             </TableRow>
 
-                <ScrollView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
-                    <TableLayout
-                        android:id="@+id/table_lay"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:stretchColumns="*"/>
-                </ScrollView>
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="396dp">
 
+                <TableLayout
+                    android:id="@+id/table_lay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stretchColumns="*" />
+
+            </ScrollView>
         </TableLayout>
 
     </LinearLayout>
@@ -82,8 +105,8 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/linearLayout"
-        android:layout_width="390dp"
-        android:layout_height="47dp"
+        android:layout_width="399dp"
+        android:layout_height="74dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -91,76 +114,63 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints">
 
-            <TableLayout
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="94dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/add"
+                    android:layout_width="74dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="Add Row"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/ret"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/ins" />
 
-                    <Button
-                        android:id="@+id/add"
-                        android:layout_width="68dp"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginRight="8dp"
-                        android:text="Add Row"
-                        android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/ret"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/ins" />
+                <Button
+                    android:id="@+id/delete"
+                    android:layout_width="68dp"
+                    android:layout_height="wrap_content"
+                    android:text="delete"
+                    android:textSize="12sp" />
 
-                    <Button
-                        android:id="@+id/log"
-                        android:layout_width="49dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginRight="8dp"
-                        android:text="Logout"
-                        android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/ins"
-                        app:layout_constraintHorizontal_bias="0.615"
-                        app:layout_constraintStart_toStartOf="parent" />
+                <Button
+                    android:id="@+id/ins"
+                    android:layout_width="73dp"
+                    android:layout_height="wrap_content"
+                    android:text="Save"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:ignore="MissingConstraints"
+                    tools:layout_editor_absoluteX="95dp" />
 
-                    <Button
-                        android:id="@+id/delete"
-                        android:layout_width="71dp"
-                        android:layout_height="wrap_content"
-                        android:text="delete"
-                        android:textSize="12sp" />
+                <Button
+                    android:id="@+id/ret"
+                    android:layout_width="87dp"
+                    android:layout_height="52dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginRight="24dp"
+                    android:text="Display"
+                    android:textSize="12sp" />
 
-                    <Button
-                        android:id="@+id/ins"
-                        android:layout_width="69dp"
-                        android:layout_height="wrap_content"
-                        android:text="Save"
-                        android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        tools:ignore="MissingConstraints"
-                        tools:layout_editor_absoluteX="95dp" />
+            </TableRow>
+        </TableLayout>
 
-                    <Button
-                        android:id="@+id/ret"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="24dp"
-                        android:layout_marginRight="24dp"
-                        android:text="Display"
-                        android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent" />
-
-                </TableRow>
-
-            </TableLayout>
 
     </android.support.constraint.ConstraintLayout>
 
