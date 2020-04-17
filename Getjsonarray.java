@@ -36,7 +36,7 @@ public class Getjsonarray extends AsyncTask<String,String,String> {
         edate = strings[1];
         String User_id = strings[2];
         try{
-        String u = "http://192.168.1.8/Display.php";
+        String u = "http://192.168.1.9/Display.php";
         URL url = new URL(u);
         HttpURLConnection http = (HttpURLConnection) url.openConnection();
         http.setRequestMethod("POST");
@@ -61,7 +61,7 @@ public class Getjsonarray extends AsyncTask<String,String,String> {
             while ((inputStr = streamReader.readLine()) != null)
                 responseStrBuilder.append(inputStr);
 
-            res = String.valueOf(responseStrBuilder.toString());
+            res = responseStrBuilder.toString();
 
             jrr = new JSONArray(responseStrBuilder.toString());
 

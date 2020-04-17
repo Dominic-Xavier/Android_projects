@@ -45,7 +45,7 @@ public class Register extends AppCompatActivity {
                     t2.setText("");
                     t3.setText("");
                 } else {
-                        String url = "http://192.168.1.8/register.php";
+                        String url = "http://192.168.1.9/register.php";
                         new Background(this).execute(s1,s2,url);
                     }
         });

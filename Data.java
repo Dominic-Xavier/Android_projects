@@ -35,7 +35,7 @@ public class Data extends AsyncTask<String,Void,String> {
     @Override
     protected String doInBackground(String... strings) {
         try{
-            final String ip = "http://192.168.1.8:80/data.php";
+            final String ip = "http://192.168.1.9:80/data.php";
 
             System.out.println("Datas:"+add);
 

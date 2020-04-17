@@ -3,7 +3,6 @@ package com.myapp.myapplication;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
@@ -53,11 +52,11 @@ public class Background extends AsyncTask <String, Void,String> {
 
         try {
 
-                if(connstr.equals("http://192.168.1.8/login.php"))
+                if(connstr.equals("http://192.168.1.9/login.php"))
                 {
                     u = connstr;
                 }
-                else if(connstr.equals("http://192.168.1.8/register.php"))
+                else if(connstr.equals("http://192.168.1.9/register.php"))
                 {
                     u = connstr;
                 }

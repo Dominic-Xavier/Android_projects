@@ -20,6 +20,9 @@ public class display extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
 
+        TextView total = findViewById(R.id.total_value);
+        int total_values = 0;
+
         Intent in = getIntent();
         String data = in.getStringExtra("Jsondata");
 
@@ -28,6 +31,7 @@ public class display extends AppCompatActivity {
         t1.setColumnStretchable(0, true);
         t1.setColumnStretchable(1, true);
         t1.setColumnStretchable(2, true);
+        Integer Amot;
 
         try {
             JSONArray getResponse = new JSONArray(data);
@@ -36,7 +40,8 @@ public class display extends AppCompatActivity {
                 JSONObject jobj = getResponse.getJSONObject(k);
                 String date = jobj.getString("Date");
                 String Des = jobj.getString("Description");
-                Integer Amot = jobj.getInt("Amount");
+                Amot = jobj.getInt("Amount");
+                //Counting Total values
                 String col_name[] = {date, Des, Amot + ""};
                 for (String i : col_name) {
                     row.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
@@ -51,11 +56,14 @@ public class display extends AppCompatActivity {
                     row.addView(tv);
                 }
                 t1.addView(row);
+                total_values +=Amot;
             }
-        } catch (Exception e) {
-            new sql(getApplicationContext()).show("Error", e.toString(), "OK");
+            System.out.println("Total_values:"+total_values);
+            total.setText(""+total_values);
         }
-
+        catch (Exception e) {
+            new sql(this).show("Error", e.toString(), "OK");
+        }
 
 
         /*Volley.newRequestQueue(this).add(new JsonArrayRequest(Request.Method.POST, ip, null, new Response.Listener<JSONArray>() {

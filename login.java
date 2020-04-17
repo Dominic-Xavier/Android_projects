@@ -43,7 +43,7 @@ public class login extends AppCompatActivity {
             else
             {
                 Background bg = new Background(this);
-                String url = "http://192.168.1.8/login.php";
+                String url = "http://192.168.1.9/login.php";
                 bg.execute(user, pass, url);
                 bg.setUser_name(user);
             }

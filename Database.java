@@ -6,23 +6,37 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.ActionMode;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -35,6 +49,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -52,6 +70,8 @@ public class Database extends AppCompatActivity implements View.OnClickListener 
     AlertDialog al;
     JSONObject jobj;
     Intent i;
+    ImageView profile;
+    private static final int IMAGE_CODE = 1;
 
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -62,15 +82,26 @@ public class Database extends AppCompatActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database);
 
-        Button logout = (Button) findViewById(R.id.log);
-        Button insert = (Button) findViewById(R.id.ins);
-        Button ret = (Button) findViewById(R.id.ret);
-        add_row = (Button) findViewById(R.id.add);
-        del_row = (Button)findViewById(R.id.delete);
-        t1 = (TableLayout) findViewById(R.id.tbl);
-        t2 = (TableLayout) findViewById(R.id.table_lay);
-        TextView name = (TextView) findViewById(R.id.user_name);
-        TextView text = (TextView) findViewById(R.id.date) ;
+        Button insert =  findViewById(R.id.ins);
+        Button ret =  findViewById(R.id.ret);
+        add_row =  findViewById(R.id.add);
+        del_row = findViewById(R.id.delete);
+        t1 =  findViewById(R.id.tbl);
+        t2 =  findViewById(R.id.table_lay);
+        TextView name =  findViewById(R.id.user_name);
+        TextView text =  findViewById(R.id.date) ;
+        //profile = findViewById(R.id.profile_pic);
+        EditText str = new EditText(this);
+        EditText etr = new EditText(this);
+        str.setInputType(InputType.TYPE_CLASS_DATETIME);
+        etr.setInputType(InputType.TYPE_CLASS_DATETIME);
+        str.setGravity(Gravity.CENTER);
+        etr.setGravity(Gravity.CENTER);
+        str.setHint("DD/MM/YYYY");
+        etr.setHint("DD/MM/YYYY");
+        str.setHintTextColor(Color.BLACK);
+        etr.setHintTextColor(Color.BLACK);
+
 
         final String datas = sql.getData("User_name",this);
         final String u_id = sql.getData("u_id",this);
@@ -78,36 +109,21 @@ public class Database extends AppCompatActivity implements View.OnClickListener 
 
         //Used for redirecting user to login page
         Handler handler=new Handler();
-        handler.postDelayed(new Runnable() {
+        handler.postAtFrontOfQueue(new Runnable() {
             @Override
             public void run() {
                 if(u_id == null || u_id == "") {
-                    startActivity(new Intent(Database.this, login.class));
                     finish();
+                    startActivity(new Intent(Database.this, login.class));
+
                 }
             }
-        },1);
+        });
 
 
         sql s = new sql(this);
         String date = s.date();
         text.setText("Date:" + date);
-
-        logout.setOnClickListener((v) -> {
-            AlertDialog.Builder bl = new AlertDialog.Builder(this);
-            bl.setMessage("Are you sure want to logout")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            sql.delete_data(getApplicationContext());
-                            finish();
-                            startActivity(new Intent(Database.this, login.class));
-                        }
-                    })
-                    .setNegativeButton("No", null);
-            al = bl.create();
-            al.show();
-        });
 
         add_row.setOnClickListener(this);
         del_row.setOnClickListener(this );
@@ -160,16 +176,98 @@ public class Database extends AppCompatActivity implements View.OnClickListener 
 
         ret.setOnClickListener((v) -> {
             try {
+                String user = sql.getData("u_id",this);
+                LinearLayout layout = new LinearLayout(this);
+                layout.setOrientation(LinearLayout.VERTICAL);
+                layout.addView(s.S_date());
+                layout.addView(str);
+                layout.addView(s.E_date());
+                layout.addView(etr);
+                android.support.v7.app.AlertDialog.Builder alert = new android.support.v7.app.AlertDialog.Builder(this);
+                alert.setTitle("Enter the Date")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String st_date = str.getText().toString();
+                                String e_date = etr.getText().toString();
+                                if(s.validformat(st_date) && s.validformat(e_date)){
+                                    new Getjsonarray(Database.this).execute(st_date, e_date, user);
+                                    finish();
+                                }
+                                else {
+                                    s.show("Error","Invalid format","Ok");
+                                    str.setText("");
+                                    etr.setText("");
+                                }
+                                layout.removeAllViews();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                layout.removeAllViews();
+                                str.setText("");
+                                etr.setText("");
+                            }
+                        });
+                android.support.v7.app.AlertDialog al = alert.create();
+                al.setView(layout);
+                al.setCancelable(false);
+                al.setCanceledOnTouchOutside(false);
+                al.show();
                 /*startActivity(new Intent(Database.this, popup.class));
                 finish();*/
-                s.edit_texts();
             } catch (Exception e) {
                 new sql(this).show("Error",e.toString(),"Ok");
             }
         });
     }
 
-    public void onBackPressed() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.profile_pic,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.logout:
+                logout();
+                break;
+            case R.id.choose_pic: {
+                Intent i = new Intent(
+                        Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                startActivityForResult(i, IMAGE_CODE);
+                break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /*@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == IMAGE_CODE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            profile.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            // String picturePath contains the path of selected Image
+        }
+    }*/
+
+    public AlertDialog logout(){
         AlertDialog.Builder bl = new AlertDialog.Builder(this)
                 .setMessage("Are you sure want to logout?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -183,6 +281,11 @@ public class Database extends AppCompatActivity implements View.OnClickListener 
                 .setNegativeButton("No", null);
         al = bl.create();
         al.show();
+        return al;
+    }
+
+    public void onBackPressed() {
+        logout();
     }
 
     public EditText des() {
