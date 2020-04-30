@@ -43,10 +43,11 @@ public class Register extends AppCompatActivity {
                     t1.setText("");
                     t2.setText("");
                     t3.setText("");
+                    t4.setText("");
                 } else {
-                        String url = "http://192.168.1.9/register.php";
-                        new Background(this).execute(s1,s2,s4,url);
-                    }
+                    String url = "http://192.168.1.9/register.php";
+                    new Background(this).execute(s1,s2,url,s4);
+                }
         });
 
         b2.setOnClickListener((v)-> {
@@ -56,7 +57,7 @@ public class Register extends AppCompatActivity {
     }
 
     public void onBackPressed() {
-        finish();
         startActivity(new Intent(Register.this,login.class));
+        finish();
     }
 }

@@ -1,27 +1,16 @@
 package com.myapp.myapplication;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -31,48 +20,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.view.ActionMode;
-import android.view.Display;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;;
-import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 
-public class Database extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class Database extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener {
 
     List<EditText> list = new ArrayList<EditText>();
     List<EditText> list1 = new ArrayList<EditText>();
@@ -87,7 +56,7 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
     ActionBarDrawerToggle action;
     DrawerLayout drawerLayout;
     Toolbar mTool;
-    String u_id;
+    String u_id,option_selected;
 
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -110,6 +79,14 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
 
         NavigationView mNavigationView = findViewById(R.id.navigation_view);
         mNavigationView.setNavigationItemSelectedListener(this);
+
+        Spinner spinner = findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.Select,android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(this);
+
 
         Button insert = findViewById(R.id.ins);
         Button ret = findViewById(R.id.ret);
@@ -159,41 +136,56 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
         insert.setOnClickListener((v) -> {
 
             try {
-                String des = "";
-                int amt = 0;
+                if(option_selected.equals("Select One")){
+                    new sql(this).show("Error","Please select one option","ok");
+                }
+                else{
+                    String keyword;
+                    if(option_selected.equals("Expense")){
+                        keyword = option_selected;
+                    }
+                    else {
+                        keyword = "Income";
+                    }
 
-                for (EditText text2 : list) {
-                    des = text2.getText().toString();
-                    desc.add(des);
+                    String des = "";
+                    int amt = 0;
+
+                    for (EditText text2 : list) {
+                        des = text2.getText().toString();
+                        desc.add(des);
+                    }
+
+                    for (EditText text1 : list1) {
+                        amt = Integer.parseInt(text1.getText().toString());
+                        amts.add(amt);
+                    }
+
+                    List json = new ArrayList();
+                    ListIterator l = desc.listIterator();
+                    ListIterator l2 = amts.listIterator();
+
+                    while (l.hasNext() && l2.hasNext()) {
+                        jobj = new JSONObject();
+                        jobj.put("User_id", u_id);
+                        jobj.put("option",keyword);
+                        jobj.put("Des", l.next());
+                        jobj.put("Amount", l2.next());
+                        json.add(jobj);
+                    }
+
+                    String add = json.toString();
+                    System.out.println("Datas of json" + json);
+
+                    if (isNetworkAvailable()) {
+                        Data d = new Data(this);
+                        d.setAdd(add);
+                        d.execute(keyword);
+                    } else {
+                        new sql(Database.this).show("Network Error", "Please connect to my network", "Ok");
+                    }
                 }
 
-                for (EditText text1 : list1) {
-                    amt = Integer.parseInt(text1.getText().toString());
-                    amts.add(amt);
-                }
-
-                List json = new ArrayList();
-                ListIterator l = desc.listIterator();
-                ListIterator l2 = amts.listIterator();
-
-                while (l.hasNext() && l2.hasNext()) {
-                    jobj = new JSONObject();
-                    jobj.put("User_id", u_id);
-                    jobj.put("Des", l.next());
-                    jobj.put("Amount", l2.next());
-                    json.add(jobj);
-                }
-
-                String add = json.toString();
-                System.out.println("Datas of json" + json);
-
-                if (isNetworkAvailable()) {
-                    Data d = new Data(this);
-                    d.setAdd(add);
-                    d.execute();
-                } else {
-                    new sql(Database.this).show("Network Error", "Please connect to my network", "Ok");
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -201,7 +193,6 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
 
         ret.setOnClickListener((v) -> {
             try {
-                String user = sql.getData("u_id", this);
                 LinearLayout layout = new LinearLayout(this);
                 layout.setOrientation(LinearLayout.VERTICAL);
                 layout.addView(s.S_date());
@@ -216,7 +207,8 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
                                 String st_date = str.getText().toString();
                                 String e_date = etr.getText().toString();
                                 if (s.validformat(st_date) && s.validformat(e_date)) {
-                                    new Getjsonarray(Database.this).execute(st_date, e_date, user);
+                                    String url = "http://192.168.1.9/Display.php";
+                                    new Getjsonarray(this).execute(url,u_id,st_date, e_date);
                                     finish();
                                 } else {
                                     s.show("Error", "Invalid format", "Ok");
@@ -369,40 +361,54 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
+        TableRow row = new TableRow(this);
         int id = menuItem.getItemId();
         switch (id) {
             case R.id.logout:
                 logout();
                 break;
             case R.id.my_account: {
-                final String ip = "http://192.168.1.9/User_details.php";
-                JsonObjectRequest jobj = new JsonObjectRequest(Request.Method.POST, ip, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        new sql(Database.this).show("Success", response.toString(), "Ok");
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        new sql(Database.this).show("Error", error.toString(), "ok");
-                        System.out.println("Error:"+error);
-                    }
-                })
-                {
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<String, String>();
-                        params.put("id", u_id);
-                        return params;
-                    }};
-                MySingleTon.getInstance(this).addToRequestQue(jobj);
+                String url = "http://192.168.1.9/User_details.php";
+                new Getjsonarray(this).execute(url,u_id);
+                finish();
                 break;
             }
             case R.id.expense:
                 new sql(this).show("Success", "You have selected Expense", "ok");
                 break;
         }
-
         return true;
     }
+
+    /**
+     * <p>Callback method to be invoked when an item in this view has been
+     * selected. This callback is invoked only when the newly selected
+     * position is different from the previously selected position or if
+     * there was no selected item.</p>
+     * <p>
+     * Implementers can call getItemAtPosition(position) if they need to access the
+     * data associated with the selected item.
+     *
+     * @param parent   The AdapterView where the selection happened
+     * @param view     The view within the AdapterView that was clicked
+     * @param position The position of the view in the adapter
+     * @param id       The row id of the item that is selected
+     */
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        option_selected = parent.getItemAtPosition(position).toString();
+    }
+
+    /**
+     * Callback method to be invoked when the selection disappears from this
+     * view. The selection can disappear for instance when touch is activated
+     * or when the adapter becomes empty.
+     *
+     * @param parent The AdapterView that now contains no selected item.
+     */
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        new sql(this).show("Error","Please select one option","Ok");
+    }
 }
+

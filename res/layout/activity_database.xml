@@ -82,11 +82,10 @@
     <LinearLayout
         android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/tableLayout3"
+        android:layout_height="479dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableLayout">
+        app:layout_constraintTop_toBottomOf="@+id/spinner">
 
         <ScrollView
             android:id="@+id/scrollView2"
@@ -95,8 +94,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tableLayout"
-            tools:ignore="MissingConstraints">
+            app:layout_constraintTop_toBottomOf="@+id/tableLayout">
 
             <TableLayout
                 android:id="@+id/table_lay"
@@ -104,7 +102,6 @@
                 android:layout_height="wrap_content"
                 android:forceHasOverlappingRendering="true"
                 android:stretchColumns="*">
-
 
             </TableLayout>
         </ScrollView>
@@ -114,22 +111,22 @@
 
     <TableLayout
         android:id="@+id/tableLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
         android:stretchColumns="*"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <Button
                 android:id="@+id/add"
                 android:layout_width="wrap_content"
-                android:layout_height="35dp"
+                android:layout_height="44dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginEnd="8dp"
@@ -165,6 +162,15 @@
         </TableRow>
     </TableLayout>
 
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
 </android.support.constraint.ConstraintLayout>
     <include layout="@layout/navigation"/>
 </android.support.v4.widget.DrawerLayout>

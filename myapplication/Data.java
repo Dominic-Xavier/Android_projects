@@ -35,9 +35,10 @@ public class Data extends AsyncTask<String,Void,String> {
     @Override
     protected String doInBackground(String... strings) {
         try{
+            String keyword = strings[0];// To tell the server weather it is income or expense
             final String ip = "http://192.168.1.9:80/data.php";
 
-            System.out.println("Datas:"+add);
+            System.out.println("keyword:"+keyword);
 
         URL url = new URL(ip);
         HttpURLConnection http = (HttpURLConnection) url.openConnection();

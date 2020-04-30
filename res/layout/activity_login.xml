@@ -23,11 +23,9 @@
 
     <EditText
         android:id="@+id/user"
-        android:layout_width="274dp"
+        android:layout_width="284dp"
         android:layout_height="44dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="232dp"
+        android:layout_marginTop="64dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/username"
@@ -36,31 +34,25 @@
         android:hint="Username"
         android:inputType="textPersonName"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.477"
+        app:layout_constraintEnd_toEndOf="@+id/imageView2"
+        app:layout_constraintHorizontal_bias="0.442"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <EditText
         android:id="@+id/pass"
         android:layout_width="284dp"
         android:layout_height="44dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="64dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:background="@drawable/username"
         android:drawableLeft="@drawable/ic_person_black_24dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/user"
+        app:layout_constraintStart_toStartOf="@+id/user"
         app:layout_constraintTop_toBottomOf="@+id/user" />
 
 
@@ -106,7 +98,7 @@
         android:id="@+id/imageView2"
         android:layout_width="129dp"
         android:layout_height="114dp"
-        app:layout_constraintBottom_toTopOf="@+id/user"
+        android:layout_marginTop="72dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

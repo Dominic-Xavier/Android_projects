@@ -7,20 +7,27 @@
     android:layout_height="match_parent"
     tools:context=".Account_Details">
 
+    <include
+        android:id="@+id/include3"
+        layout="@layout/tool_bars"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="262dp"
+        android:layout_height="250dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/include3">
 
         <ImageView
             android:id="@+id/profile_pic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            app:srcCompat="@mipmap/baseline_photo_size_select_actual_black_48dp"/>
+            app:srcCompat="@mipmap/baseline_photo_size_select_actual_black_48dp" />
     </LinearLayout>
 
     <TableLayout
@@ -43,7 +50,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:text="User Name"
-                android:textSize="40dp"
+                android:textSize="20dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -52,7 +59,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:text="Name"
-                android:textSize="40dp"
+                android:textSize="20dp"
                 android:textStyle="bold" />
         </TableRow>
 
@@ -66,7 +73,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:text="User Id"
-                android:textSize="40dp"
+                android:textSize="20dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -75,7 +82,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:text="Id"
-                android:textSize="40dp"
+                android:textSize="20dp"
                 android:textStyle="bold" />
         </TableRow>
 
@@ -89,7 +96,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:text="Mobile No"
-                android:textSize="40dp"
+                android:textSize="20dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -98,7 +105,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:text="Number"
-                android:textSize="40dp"
+                android:textSize="20dp"
                 android:textStyle="bold"/>
         </TableRow>
     </TableLayout>

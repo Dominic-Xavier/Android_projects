@@ -1,6 +1,7 @@
 package com.myapp.myapplication;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -20,8 +21,9 @@ public class display extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
 
-        TextView total = findViewById(R.id.total_value);
         int total_values = 0;
+
+        TextView total_amount = new TextView(this);
 
         Intent in = getIntent();
         String data = in.getStringExtra("Jsondata");
@@ -58,8 +60,10 @@ public class display extends AppCompatActivity {
                 t1.addView(row);
                 total_values +=Amot;
             }
-            System.out.println("Total_values:"+total_values);
-            total.setText(""+total_values);
+            total_amount.setText("Total:"+total_values);
+            total_amount.setGravity(Gravity.RIGHT);
+            total_amount.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+            t1.addView(total_amount);
         }
         catch (Exception e) {
             new sql(this).show("Error", e.toString(), "OK");

@@ -29,15 +29,24 @@ public class Getjsonarray extends AsyncTask<String,String,String> {
 
     String res;
     JSONArray jrr;
+    String urls;
     @Override
     protected String doInBackground(String... strings) {
-        String sdate,edate;
-        sdate = strings[0];
-        edate = strings[1];
-        String User_id = strings[2];
+        String u="",User_id="",sdate="",edate="";
+        u = strings[0];
+        User_id = strings[1];
         try{
-        String u = "http://192.168.1.9/Display.php";
-        URL url = new URL(u);
+            if(u.equals("http://192.168.1.9/Display.php")){
+                urls = u;
+                sdate = strings[2];
+                edate = strings[3];
+            }
+            else if(u.equals("http://192.168.1.9/User_details.php")) {
+                urls = u;
+                sdate = "Nothing";
+                edate = "Nothing";
+            }
+        URL url = new URL(urls);
         HttpURLConnection http = (HttpURLConnection) url.openConnection();
         http.setRequestMethod("POST");
         http.setDoInput(true);
@@ -45,9 +54,9 @@ public class Getjsonarray extends AsyncTask<String,String,String> {
 
         OutputStream ops = http.getOutputStream();
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(ops,"UTF-8"));
-        String data = URLEncoder.encode("sdate","UTF-8")+"="+URLEncoder.encode(sdate,"UTF-8")
-                +"&&"+URLEncoder.encode("edate","UTF-8")+"="+URLEncoder.encode(edate,"UTF-8")
-                +"&&"+URLEncoder.encode("User_id","UTF-8")+"="+URLEncoder.encode(User_id,"UTF-8");
+        String data = URLEncoder.encode("User_id","UTF-8")+"="+URLEncoder.encode(User_id,"UTF-8")
+                +"&&"+URLEncoder.encode("sdate","UTF-8")+"="+URLEncoder.encode(sdate,"UTF-8")
+                +"&&"+URLEncoder.encode("edate","UTF-8")+"="+URLEncoder.encode(edate,"UTF-8");
         writer.write(data);
         writer.flush();
         writer.close();
@@ -71,22 +80,33 @@ public class Getjsonarray extends AsyncTask<String,String,String> {
         ops.close();
         http.disconnect();
         return res;
-    } catch (
-    MalformedURLException e) {
-            res = e.getMessage();
-    } catch (IOException e) {
-            res = e.getMessage();
-    } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (
+        MalformedURLException e) {
+                res = e.getMessage();
+        } catch (IOException e) {
+                res = e.getMessage();
+        } catch (JSONException e) {
+                e.printStackTrace();
         }
-        return res;
+
+    return res;
     }
+
     @Override
     protected void onPostExecute(String s) {
-            System.out.println("String JSon:"+s);
-            Intent intent_name = new Intent();
+        System.out.println("String JSon:"+s);
+        Intent intent_name = new Intent();
+        if(urls.equals("http://192.168.1.9/User_details.php")){
+            intent_name.putExtra("Jsondata",s);
+            intent_name.setClass(context.getApplicationContext(),Account_Details.class);
+            context.startActivity(intent_name);
+            System.out.println("Jsondata:"+s);
+        }
+        else if(urls.equals("http://192.168.1.9/Display.php")){
+            System.out.println("Jsondata:"+s);
             intent_name.putExtra("Jsondata",s);
             intent_name.setClass(context.getApplicationContext(),display.class);
             context.startActivity(intent_name);
         }
+    }
 }

@@ -46,7 +46,7 @@ public class Background extends AsyncTask <String, Void,String> {
 
         String user = voids[0];
         String pass = voids[1];
-        String Mobile_no = voids[3];
+        String Mobile_no="";
 
         String connstr = voids[2];
         String u="";
@@ -56,10 +56,12 @@ public class Background extends AsyncTask <String, Void,String> {
                 if(connstr.equals("http://192.168.1.9/login.php"))
                 {
                     u = connstr;
+                    Mobile_no = "This is a blank variable";
                 }
                 else if(connstr.equals("http://192.168.1.9/register.php"))
                 {
                     u = connstr;
+                    Mobile_no = voids[3];
                 }
                 URL url = new URL(u);
                 HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -116,6 +118,7 @@ public class Background extends AsyncTask <String, Void,String> {
             Intent intent_name = new Intent();
             intent_name.setClass(context.getApplicationContext(),login.class);
             context.startActivity(intent_name);
+            ((Activity)context).finish();
             Toast toast=Toast.makeText(context.getApplicationContext(),"Successfully Registered",Toast.LENGTH_SHORT);
             toast.show();
         }
