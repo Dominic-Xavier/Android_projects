@@ -1,6 +1,7 @@
-package com.myapp.myapplication;
+package com.myapp.finance;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,14 +12,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -32,14 +26,22 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import androidx.appcompat.widget.Toolbar;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 public class Database extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener {
 
@@ -174,13 +176,20 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
                         json.add(jobj);
                     }
 
-                    String add = json.toString();
+                    StringBuffer add = new StringBuffer();
+                            add.append(json.toString());
                     System.out.println("Datas of json" + json);
 
                     if (isNetworkAvailable()) {
                         Data d = new Data(this);
                         d.setAdd(add);
+                        System.out.println("Add values:"+add.toString());
+                        desc.removeAll(desc);
+                        amts.removeAll(amts);
+                        jobj.remove("Des");
+                        jobj.remove("Amount");
                         d.execute(keyword);
+
                     } else {
                         new sql(Database.this).show("Network Error", "Please connect to my network", "Ok");
                     }
@@ -199,7 +208,7 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
                 layout.addView(str);
                 layout.addView(s.E_date());
                 layout.addView(etr);
-                android.support.v7.app.AlertDialog.Builder alert = new android.support.v7.app.AlertDialog.Builder(this);
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 alert.setTitle("Enter the Date")
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
@@ -208,7 +217,7 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
                                 String e_date = etr.getText().toString();
                                 if (s.validformat(st_date) && s.validformat(e_date)) {
                                     String url = "http://192.168.1.9/Display.php";
-                                    new Getjsonarray(this).execute(url,u_id,st_date, e_date);
+                                    new Getjsonarray(Database.this).execute(url,u_id,st_date, e_date);
                                     finish();
                                 } else {
                                     s.show("Error", "Invalid format", "Ok");
@@ -226,7 +235,7 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
                                 etr.setText("");
                             }
                         });
-                android.support.v7.app.AlertDialog al = alert.create();
+                AlertDialog al = alert.create();
                 al.setView(layout);
                 al.setCancelable(false);//from touching back button
                 al.setCanceledOnTouchOutside(false);//from touching apart from Alert
@@ -236,6 +245,7 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
             }
         });
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -370,12 +380,14 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
             case R.id.my_account: {
                 String url = "http://192.168.1.9/User_details.php";
                 new Getjsonarray(this).execute(url,u_id);
-                finish();
                 break;
             }
-            case R.id.expense:
-                new sql(this).show("Success", "You have selected Expense", "ok");
+            case R.id.expense:{
+                final String ip = "http://192.168.1.9/Total_exp_inc.php";
+                new Getjsonarray(this).execute(ip,u_id);
+                //new sql(this).show("Sorry","This feature is comming soon","ok");
                 break;
+            }
         }
         return true;
     }

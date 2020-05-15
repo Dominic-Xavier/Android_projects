@@ -1,4 +1,4 @@
-package com.myapp.myapplication;
+package com.myapp.finance;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +30,8 @@ public class Getjsonarray extends AsyncTask<String,String,String> {
     String res;
     JSONArray jrr;
     String urls;
+
+
     @Override
     protected String doInBackground(String... strings) {
         String u="",User_id="",sdate="",edate="";
@@ -42,6 +44,11 @@ public class Getjsonarray extends AsyncTask<String,String,String> {
                 edate = strings[3];
             }
             else if(u.equals("http://192.168.1.9/User_details.php")) {
+                urls = u;
+                sdate = "Nothing";
+                edate = "Nothing";
+            }
+            else if(u.equals("http://192.168.1.9/Total_exp_inc.php")){
                 urls = u;
                 sdate = "Nothing";
                 edate = "Nothing";
@@ -96,17 +103,28 @@ public class Getjsonarray extends AsyncTask<String,String,String> {
     protected void onPostExecute(String s) {
         System.out.println("String JSon:"+s);
         Intent intent_name = new Intent();
-        if(urls.equals("http://192.168.1.9/User_details.php")){
-            intent_name.putExtra("Jsondata",s);
-            intent_name.setClass(context.getApplicationContext(),Account_Details.class);
-            context.startActivity(intent_name);
-            System.out.println("Jsondata:"+s);
-        }
-        else if(urls.equals("http://192.168.1.9/Display.php")){
-            System.out.println("Jsondata:"+s);
-            intent_name.putExtra("Jsondata",s);
-            intent_name.setClass(context.getApplicationContext(),display.class);
-            context.startActivity(intent_name);
+        switch (urls){
+            case "http://192.168.1.9/User_details.php":{
+                intent_name.putExtra("Jsondata",s);
+                intent_name.setClass(context.getApplicationContext(),Account_Details.class);
+                context.startActivity(intent_name);
+                System.out.println("Jsondata:"+s);
+                break;
+            }
+            case "http://192.168.1.9/Display.php":{
+                System.out.println("Jsondata:"+s);
+                intent_name.putExtra("Jsondata",s);
+                intent_name.setClass(context.getApplicationContext(),display.class);
+                context.startActivity(intent_name);
+                break;
+            }
+            case "http://192.168.1.9/Total_exp_inc.php":{
+                System.out.println("Jsondata:"+s);
+                intent_name.putExtra("Jsondata",s);
+                intent_name.setClass(context.getApplicationContext(),FlowTracker.class);
+                context.startActivity(intent_name);
+                break;
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.myapp.myapplication;
+package com.myapp.finance;
 
 import android.content.Context;
 

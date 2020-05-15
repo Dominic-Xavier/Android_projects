@@ -1,8 +1,8 @@
-package com.myapp.myapplication;
+package com.myapp.finance;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.Button;
@@ -12,10 +12,14 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class display extends AppCompatActivity {
 
+    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +45,8 @@ public class display extends AppCompatActivity {
                 TableRow row = new TableRow(display.this);
                 JSONObject jobj = getResponse.getJSONObject(k);
                 String date = jobj.getString("Date");
-                String Des = jobj.getString("Description");
-                Amot = jobj.getInt("Amount");
+                String Des = jobj.getString("Exp_Des");
+                Amot = jobj.getInt("Exp_Amt");
                 //Counting Total values
                 String col_name[] = {date, Des, Amot + ""};
                 for (String i : col_name) {
@@ -64,6 +68,9 @@ public class display extends AppCompatActivity {
             total_amount.setGravity(Gravity.RIGHT);
             total_amount.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
             t1.addView(total_amount);
+        }
+        catch(JSONException e){
+            new sql(this).show("Sorry", "Empty values", "OK");
         }
         catch (Exception e) {
             new sql(this).show("Error", e.toString(), "OK");

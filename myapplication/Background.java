@@ -1,4 +1,4 @@
-package com.myapp.myapplication;
+package com.myapp.finance;
 
 import android.app.Activity;
 import android.app.AlertDialog;

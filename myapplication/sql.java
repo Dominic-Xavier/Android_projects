@@ -1,24 +1,17 @@
-package com.myapp.myapplication;
+package com.myapp.finance;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
-import android.text.InputType;
-import android.view.Gravity;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,16 +22,17 @@ import java.util.Locale;
 public class sql extends SQLiteOpenHelper {
 
     Context context;
+    static SharedPreferences preferences;
 
     public static void setData(String Key,String value,Context context){
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor edit = preferences.edit();
         edit.putString(Key,value);
         edit.commit();
     }
 
     public static String getData(String key,Context context){
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
         if(key.equals("User_name"))
             return preferences.getString("User_name",null);
         else
@@ -46,7 +40,7 @@ public class sql extends SQLiteOpenHelper {
     }
 
     public static void delete_data(Context context){
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor edit = preferences.edit();
         edit.clear();
         edit.commit();
@@ -98,7 +92,7 @@ public class sql extends SQLiteOpenHelper {
     }
 
     public Boolean validformat(String date) {
-        Boolean b = null;
+        Boolean b = false;
         try {
             Date d = null;
             final String Dateformat = "dd-mm-yyyy";
@@ -114,7 +108,6 @@ public class sql extends SQLiteOpenHelper {
             else
                 b = false;
         } catch (ParseException e) {
-            b = false;
             e.printStackTrace();
         }
         return b;
@@ -140,6 +133,10 @@ public class sql extends SQLiteOpenHelper {
         t.setTextSize(20);
         t.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         return t;
+    }
+
+    public String getMonthForInt(int num) {
+        return new DateFormatSymbols().getMonths()[num-1];
     }
 
 }

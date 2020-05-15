@@ -1,16 +1,11 @@
-package com.myapp.myapplication;
+package com.myapp.finance;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public class Register extends AppCompatActivity {

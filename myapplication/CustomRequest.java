@@ -1,4 +1,4 @@
-package com.myapp.myapplication;
+package com.myapp.finance;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;

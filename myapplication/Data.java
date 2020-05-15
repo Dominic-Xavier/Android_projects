@@ -1,4 +1,4 @@
-package com.myapp.myapplication;
+package com.myapp.finance;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -22,15 +22,15 @@ public class Data extends AsyncTask<String,Void,String> {
         this.context = context;
     }
 
-    public String getAdd() {
+    public StringBuffer getAdd() {
         return add;
     }
 
-    public void setAdd(String add) {
+    public void setAdd(StringBuffer add) {
         this.add = add;
     }
 
-    String add;
+    StringBuffer add;
 
     @Override
     protected String doInBackground(String... strings) {
@@ -51,7 +51,7 @@ public class Data extends AsyncTask<String,Void,String> {
 
         OutputStream ops = http.getOutputStream();
         BufferedWriter br = new BufferedWriter(new OutputStreamWriter(ops,"UTF-8"));
-        br.write(getAdd());
+        br.write(String.valueOf(getAdd()));
         br.flush();
 
         InputStream ips = http.getInputStream();
