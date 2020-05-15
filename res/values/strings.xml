@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Database</string>
+    <string name="app_name">Financial Manager</string>
     <string name="title_activity_main2">Login</string>
     <string name="title_activity_database">database</string>
 
