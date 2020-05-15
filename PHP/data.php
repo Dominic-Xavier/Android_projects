@@ -4,7 +4,7 @@
 	
 	function data(){
 		
-		global $connection,$count,$query1,$keywords;;
+		global $connection,$count,$query1,$keywords,$table_name,$column_des,$column_amt;
 		
 		$json = file_get_contents('php://input');
 		$obj = json_decode($json,true);
@@ -22,14 +22,15 @@
 					break;
 				}
 				
-				$u_id_income = $user_id.$Keyword;
-				$u_id_expense = $user_id.$Keyword;
+				$table_name = $user_id;
 				
 				if($keywords == "Expense"){
-					$query1 = "insert into $u_id_expense(Date,Description,Amount) values('$myDate','$des','$amt')";
+					$column_des = 'Exp_Des';
+					$column_amt = 'Exp_Amt';
 				}
 				else{
-					$query1 = "insert into $u_id_income(Date,Description,Amount) values('$myDate','$des','$amt')";
+					$column_des = 'Inc_Des';
+					$column_amt = 'Inc_Amt';
 				}
 				
 			//iterating through json object i.e (Des & amt)
@@ -38,8 +39,7 @@
 				$des = $value['Des'];
 				$amt = $value['Amount'];
 				
-				$query = $query1;
-			
+				$query = "insert into $table_name(Date,$column_des,$column_amt) values('$myDate','$des','$amt')";
 		
 				if(mysqli_query($connection,$query))
 					$count = true;

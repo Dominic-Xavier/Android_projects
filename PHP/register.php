@@ -29,36 +29,30 @@ function register()
 		$uid = "u_id_".$count;
 	}
 	
-	$u_id_income = $uid."income";
-	$u_id_expense = $uid."expense";
-	
-	$query = "insert into login(id,Username,Password,Mobile_Number) values('$uid','$username','$password','$Mobile_Number')";
-	$sql= "create table $u_id_income(Date date,Description varchar(250),Amount int(10))";
-	$sqls= "create table $u_id_expense(Date date,Description varchar(250),Amount int(10))";
-				while($row = mysqli_fetch_assoc($res)){
-				$dbusername = $row['Username'];
-				if($username == $dbusername){
-					$count1 = 1;
-					break;
-					}
+	$query = "insert into login(id,Username,Password,Mobile_Number) values('$uid','$username','$password','$Mobile_Number')";//used to store user's login credential
+	$sql= "create table $uid(Date date, Exp_Des text(5000),Exp_Amt int(10),Inc_Des text(5000),Inc_Amt int(10))";
+		while($row = mysqli_fetch_assoc($res)){
+		$dbusername = $row['Username'];
+		if($username == $dbusername){
+			$count1 = 1;
+			break;
+			}
+		}
+		if($count1==0){
+			if(mysqli_query($connection,$sql)){ // Inserting values into database
+				if(mysqli_query($connection,$query)){// Creating Table for users
+					echo "Registered Successfully";
 				}
-				if($count1==0){
-					if(mysqli_query($connection,$query)){ //inserting values into database
-						if(mysqli_query($connection,$sql)){ //creating table in the name of u_id_income
-							if(mysqli_query($connection,$sqls)){ //creating table in the name of u_id_expense
-								echo "Registered Successfully";
-							}
-						}
-					}         
-				}
-				else if($count1==1){
-					echo "Sorry!, Username already Exists";
-				}
-				else{
-					echo"Failure".mysqli_error($connection);
-				}
-				$count1 = 0;
-		mysqli_close($connection);
+			}         
+		}
+		else if($count1==1){
+			echo "Sorry!, Username already Exists";
+		}
+		else{
+			echo"Failure".mysqli_error($connection);
+		}
+		$count1 = 0;
+	mysqli_close($connection);
 	}
 }
 
