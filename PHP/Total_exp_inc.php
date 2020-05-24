@@ -12,12 +12,13 @@ function expense_income($connection){
 		$Inc_Exp_arr = array();
 		$sql = "select year (date) as year, month (date) as month,  sum(Inc_amt) as Total_income, sum(Exp_Amt) as Total_Expense FROM $user_id group by year(date), month(date) ";
 		$result = mysqli_query($connection,$sql);
-		if($result){
-			while($row = mysqli_fetch_assoc($result)){
-			$Inc_Exp_arr[] = $row;
-		}
-		$obj = json_encode($Inc_Exp_arr);
-		echo $obj;
+			if($result){
+				while($row = mysqli_fetch_assoc($result)){
+					//if($row!=null)
+				$Inc_Exp_arr[] = $row;
+			}
+			$obj = json_encode($Inc_Exp_arr);
+			echo $obj;
 		}
 	}
 }
