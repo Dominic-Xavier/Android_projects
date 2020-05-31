@@ -43,20 +43,19 @@ public class FlowTracker extends AppCompatActivity {
                 String month = arr.getString("month");
                 String expense = arr.getString("Total_Expense");
                 String income = arr.getString("Total_income");
-
                 int tot_ex = Integer.parseInt(expense);
                 int tot_in = Integer.parseInt(income);
                 int total_Exp_Inc = tot_in-tot_ex;
                 int mon = Integer.parseInt(month);
                 String month_in_words = new sql(this).getMonthForInt(mon);
-                    years.add(year);
-                    months.add(month_in_words);
-                    expenses.add(expense);
-                    incomes.add(income);
-                    total_values.add(total_Exp_Inc);
+                years.add(year);
+                months.add(month_in_words);
+                expenses.add(expense);
+                incomes.add(income);
+                total_values.add(total_Exp_Inc);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            new sql(this).show("Error",e.toString(),"Ok");
         }
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);

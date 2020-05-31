@@ -42,7 +42,8 @@ public class sql extends SQLiteOpenHelper {
     public static void delete_data(Context context){
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor edit = preferences.edit();
-        edit.clear();
+        edit.remove("User_name");
+        edit.remove("u_id");
         edit.commit();
     }
 

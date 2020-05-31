@@ -93,13 +93,13 @@ public class Account_Details extends AppCompatActivity {
                 ImageDecoder.Source profile_picture = ImageDecoder.createSource(this.getContentResolver(), image);
                 Bitmap bitmap = ImageDecoder.decodeBitmap(profile_picture);
                 String directory_name = sql.getData("User_name",this);
-                String file_name = directory_name;
+                String PROFILE_PIC_NAME = sql.getData("Profile_Pic",this);
+                String file_name = profilePicName(directory_name);
                 String result = ImageStorage.saveInternalStorage(this,bitmap,directory_name,file_name);
-                File result1 = ImageStorage.getImage(this,file_name,directory_name);
+                File result1 = ImageStorage.getImage(this,PROFILE_PIC_NAME,directory_name);
                 if(result.equals("success")) {
-                    String file = result1.getPath();
-                    Bitmap bit = BitmapFactory.decodeFile(file);
-                    profile_pic.setImageURI(image);
+                    String name = result1.getAbsolutePath();
+                    profile_pic.setImageURI(Uri.parse(new File(name).toString()));
                     new sql(this).show("Success", "Image stored Successfully", "Ok");
                 }
                 else
@@ -112,5 +112,12 @@ public class Account_Details extends AppCompatActivity {
                 new sql(this).show("Failed",ex.toString(),"Ok");
             }
         }
+    }
+
+    public String profilePicName(String Image_Name){
+        Random rand = new Random();
+        int rand_int1 = rand.nextInt(1000);
+        String file_name = Image_Name+rand_int1;
+        return file_name;
     }
 }

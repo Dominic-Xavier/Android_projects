@@ -3,6 +3,8 @@ package com.myapp.finance;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.Environment;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,7 +13,8 @@ public class ImageStorage  {
 
     public static String saveInternalStorage(Context context,Bitmap bitmap,String directory_name, String filename) {
 
-        String stored = null;
+        String stored = "Sorry the image already exists";
+        String a = "/data/data/com.myapp.finance/files/Xavier";
 
         File sdcard = context.getFilesDir();
 
@@ -19,6 +22,8 @@ public class ImageStorage  {
         if(!folder.exists())
         folder.mkdir();
         File file = new File(folder.getAbsoluteFile(), filename + ".jpg");
+
+        sql.setData("Profile_Pic",filename +".jpg",context);
 
         if (file.exists())
             return stored ;
@@ -64,5 +69,23 @@ public class ImageStorage  {
             return false;
         }
         return true ;
+    }
+
+    public String profilePic(Context context,Bitmap bitmap,String directory_name, String filename){
+        String result = "failed";
+        File profile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)+File.separator+"Financial Manager");
+        if(!profile.exists())
+            profile.mkdir();
+
+        try {
+            FileOutputStream out = new FileOutputStream(profile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+            result = "success";
+        } catch (Exception e) {
+            new sql(context).show("Error",e.toString(),"ok");
+        }
+        return result;
     }
 }

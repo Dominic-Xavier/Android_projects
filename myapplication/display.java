@@ -70,7 +70,7 @@ public class display extends AppCompatActivity {
             t1.addView(total_amount);
         }
         catch(JSONException e){
-            new sql(this).show("Sorry", "Empty values", "OK");
+            new sql(this).show("Sorry", e.toString(), "OK");
         }
         catch (Exception e) {
             new sql(this).show("Error", e.toString(), "OK");

@@ -380,12 +380,13 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
             case R.id.my_account: {
                 String url = "http://192.168.1.9/User_details.php";
                 new Getjsonarray(this).execute(url,u_id);
+                finish();
                 break;
             }
             case R.id.expense:{
                 final String ip = "http://192.168.1.9/Total_exp_inc.php";
                 new Getjsonarray(this).execute(ip,u_id);
-                //new sql(this).show("Sorry","This feature is comming soon","ok");
+                finish();
                 break;
             }
         }
