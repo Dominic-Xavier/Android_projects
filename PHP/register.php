@@ -13,7 +13,7 @@ function register()
 {
 	global $connection;
 
-	$count1 = 0;
+	$count1 = $count = 0;
 	
 	if(!empty($_POST['user']) || !empty($_POST['pass']) || !empty($_POST['Mobile_no'])){
 	

@@ -24,6 +24,8 @@
 				
 				$table_name = $user_id;
 				
+				$query1 = "insert into $table_name(Date,$column_des,$column_amt) values('$myDate','0','0')";
+				
 				if($keywords == "Expense"){
 					$column_des = 'Exp_Des';
 					$column_amt = 'Exp_Amt';
@@ -39,7 +41,11 @@
 				$des = $value['Des'];
 				$amt = $value['Amount'];
 				
-				$query = "insert into $table_name(Date,$column_des,$column_amt) values('$myDate','$des','$amt')";
+				if($keywords == "Expense")
+						$query ="insert into $table_name(Date,$column_des,$column_amt,Inc_Des,Inc_Amt) values('$myDate','$des','$amt','-','0')";
+					else
+						$query = "insert into $table_name(Date,$column_des,$column_amt,Exp_Des,Exp_Amt) values('$myDate','$des','$amt','-','0')";
+						
 		
 				if(mysqli_query($connection,$query))
 					$count = true;
