@@ -14,7 +14,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class RecyclerBaseAdapter extends RecyclerView.Adapter<RecyclerBaseAdapter.Viewholder>{
+public class RecyclerBaseAdapter extends RecyclerView.Adapter<RecyclerBaseAdapter.Viewholder> {
 
     Context context;
     private List<String> year;
@@ -23,7 +23,10 @@ public class RecyclerBaseAdapter extends RecyclerView.Adapter<RecyclerBaseAdapte
     private List<String>income;
     private List<Integer>total;
 
+
+
     public RecyclerBaseAdapter(Context context,List year, List<String> month, List<String> expense, List<String> income, List<Integer> total) {
+        //View.OnClickListener mOnClickListener = new RecyclerBaseAdapter();
         this.context = context;
         this.year = year;
         this.month = month;
@@ -91,11 +94,6 @@ public class RecyclerBaseAdapter extends RecyclerView.Adapter<RecyclerBaseAdapte
         holder.Total.setTextColor(Color.parseColor("#FF0000"));
     }
 
-    /**
-     * Returns the total number of items in the data set held by the adapter.
-     *
-     * @return The total number of items in this adapter.
-     */
     @Override
     public int getItemCount() {
         return month.size();
@@ -114,4 +112,10 @@ public class RecyclerBaseAdapter extends RecyclerView.Adapter<RecyclerBaseAdapte
             Total = itemView.findViewById(R.id.total);
         }
     }
+    @FunctionalInterface
+    interface RecyclerClickListener{
+        void onClickView(int position);
+    }
 }
+
+

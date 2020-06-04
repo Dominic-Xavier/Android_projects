@@ -13,10 +13,11 @@ import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class FlowTracker extends AppCompatActivity {
+public class FlowTracker extends AppCompatActivity implements RecyclerBaseAdapter.RecyclerClickListener {
 
     List<String> years = new ArrayList<>();
     List<String> months = new ArrayList<>();
@@ -58,8 +59,12 @@ public class FlowTracker extends AppCompatActivity {
             new sql(this).show("Error",e.toString(),"Ok");
         }
 
+
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         RecyclerBaseAdapter adapter = new RecyclerBaseAdapter(this,years,months,expenses,incomes,total_values);
+        DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        divider.setDrawable(getResources().getDrawable(R.drawable.recycler_design));
+        recyclerView.addItemDecoration(divider);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -71,5 +76,12 @@ public class FlowTracker extends AppCompatActivity {
     public void onBackPressed(){
         startActivity(new Intent(this,Database.class));
         finish();
+    }
+
+    @Override
+    public void onClickView(int position) {
+        years.get(position);
+        months.get(position);
+        
     }
 }

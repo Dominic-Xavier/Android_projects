@@ -59,7 +59,7 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
     DrawerLayout drawerLayout;
     Toolbar mTool;
     String u_id,option_selected;
-
+    TableRow row;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressLint("ResourceType")
@@ -279,11 +279,19 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
         logout();
     }
 
+    public TableRow.LayoutParams Params(int left,int top,int right,int bottom){
+        TableRow.LayoutParams Params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+        Params.setMargins(left,top,right ,bottom);
+        return Params;
+    }
+
     public EditText des() {
+
         EditText et1 = new EditText(Database.this);
         et1.setTextSize(15);
         et1.setGravity(Gravity.CENTER);
         et1.setMaxWidth(et1.getWidth());
+        et1.setLayoutParams(Params(40,5,5,5));
         list.add(et1);
         return et1;
     }
@@ -294,32 +302,37 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
         et2.setGravity(Gravity.CENTER);
         et2.setInputType(InputType.TYPE_CLASS_NUMBER);
         et2.setMaxWidth(et2.getWidth());
+        et2.setLayoutParams(Params(5,5,40,5));
         list1.add(et2);
         return et2;
     }
 
     @Override
     public void onClick(View v) {
-        TableRow row = new TableRow(this);
+        row = new TableRow(this);
         switch (v.getId()) {
             case R.id.add: {
                 row.addView(des());
                 row.addView(amt());
                 t2.addView(row);
+                System.out.println("Child Count:"+t2.getChildCount());
                 break;
             }
             case R.id.delete: {
-                row.removeView(des());
-                row.removeView(amt());
-                t2.removeAllViews();
-                list.removeAll(list);
-                list1.removeAll(list1);
-                desc.removeAll(desc);
-                amts.removeAll(amts);
-                if (jobj != null) {
-                    jobj.remove("Des");
-                    jobj.remove("Amount");
+                if(t2.getChildCount()!=0){
+                    row.removeView(des());
+                    row.removeView(amt());
+                    t2.removeViewAt(t2.getChildCount()-1);
+                    list.removeAll(list);
+                    list1.removeAll(list1);
+                    desc.removeAll(desc);
+                    amts.removeAll(amts);
+                    if (jobj != null) {
+                        jobj.remove("Des");
+                        jobj.remove("Amount");
+                    }
                 }
+
                 break;
             }
         }
@@ -371,7 +384,6 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
-        TableRow row = new TableRow(this);
         int id = menuItem.getItemId();
         switch (id) {
             case R.id.logout:

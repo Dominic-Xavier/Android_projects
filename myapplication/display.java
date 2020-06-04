@@ -38,7 +38,8 @@ public class display extends AppCompatActivity {
         t1.setColumnStretchable(1, true);
         t1.setColumnStretchable(2, true);
         Integer Amot;
-
+        TableLayout.LayoutParams Params = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
+        Params.setMargins(0,0,20,0);
         try {
             JSONArray getResponse = new JSONArray(data);
             for (int k = 0; k < getResponse.length(); k++) {
@@ -67,6 +68,7 @@ public class display extends AppCompatActivity {
             total_amount.setText("Total:"+total_values);
             total_amount.setGravity(Gravity.RIGHT);
             total_amount.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+            total_amount.setLayoutParams(Params);
             t1.addView(total_amount);
         }
         catch(JSONException e){
