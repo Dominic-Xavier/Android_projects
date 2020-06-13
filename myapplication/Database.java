@@ -17,15 +17,19 @@ import android.text.InputType;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
 
 import com.android.volley.Response;
@@ -90,6 +94,7 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
         spinner.setOnItemSelectedListener(this);
 
 
+        //This View Elements are part of AlertDialogue in display Button
         Button insert = findViewById(R.id.ins);
         Button ret = findViewById(R.id.ret);
         add_row = findViewById(R.id.add);
@@ -108,7 +113,6 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
         etr.setHint("DD-MM-YYYY");
         str.setHintTextColor(Color.GRAY);
         etr.setHintTextColor(Color.GRAY);
-
 
         final String datas = sql.getData("User_name", this);
         u_id = sql.getData("u_id", this);
@@ -203,11 +207,19 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
         ret.setOnClickListener((v) -> {
             try {
                 LinearLayout layout = new LinearLayout(this);
+                LinearLayout checkBox = new LinearLayout(this);
+                checkBox.setOrientation(LinearLayout.HORIZONTAL);
                 layout.setOrientation(LinearLayout.VERTICAL);
                 layout.addView(s.S_date());
                 layout.addView(str);
                 layout.addView(s.E_date());
                 layout.addView(etr);
+                checkBox.setGravity(Gravity.CENTER);
+                CheckBox income = s.iNcome();
+                checkBox.addView(income);
+                CheckBox expense = s.eXpense();
+                checkBox.addView(expense);
+                layout.addView(checkBox);
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 alert.setTitle("Enter the Date")
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -216,9 +228,22 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
                                 String st_date = str.getText().toString();
                                 String e_date = etr.getText().toString();
                                 if (s.validformat(st_date) && s.validformat(e_date)) {
-                                    String url = "http://192.168.1.9/Display.php";
-                                    new Getjsonarray(Database.this).execute(url,u_id,st_date, e_date);
-                                    finish();
+                                    String value = s.onCheckboxClicked(expense,income),url = "";
+                                    String Keyword[] = value.split(";;");
+                                    //Keyword[0] denotes keyword and Keyword[1] denotes URL
+                                    System.out.println("Keyword:"+Keyword[0]+":"+Keyword[1]);
+                                    if(Keyword[0].equals("-")){
+                                        str.setText("");
+                                        etr.setText("");
+                                    }
+                                    else if(Keyword[0].equals("Both")){
+                                        s.show("Sorry","This feature is comming soon","Ok");
+                                        str.setText("");
+                                        etr.setText("");
+                                    }
+
+                                    else
+                                        new Getjsonarray(Database.this).execute(Keyword[1], u_id, st_date, e_date, Keyword[0]);
                                 } else {
                                     s.show("Error", "Invalid format", "Ok");
                                     str.setText("");

@@ -1,5 +1,6 @@
 package com.myapp.finance;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,8 +8,15 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.preference.PreferenceManager;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
@@ -18,6 +26,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
+
+import androidx.annotation.RequiresApi;
 
 public class sql extends SQLiteOpenHelper {
 
@@ -140,4 +150,50 @@ public class sql extends SQLiteOpenHelper {
         return new DateFormatSymbols().getMonths()[num-1];
     }
 
+
+    public CheckBox iNcome(){
+        CheckBox income = new CheckBox(context);
+        income.setText("Income");
+        income.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+        return income;
+    }
+
+
+    public CheckBox eXpense(){
+        CheckBox expense = new CheckBox(context);
+        expense.setText("Expense");
+        expense.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+        return expense;
+    }
+
+    public String onCheckboxClicked(CheckBox Expense, CheckBox Income){
+
+        CheckBox expense = Expense;
+        CheckBox income = Income;
+
+        String url="-",keyword="-";
+        if(expense.isChecked() && income.isChecked()){
+            url="http://192.168.1.9/Total_exp_inc.php";
+            keyword = "Both";
+            return keyword+";;"+url;
+        }
+
+        if(expense.isChecked()){
+            url="http://192.168.1.9/Display.php";
+            keyword = "expense";
+            Toast.makeText(context,"eXpense is selected",Toast.LENGTH_SHORT).show();
+            return keyword+";;"+url;
+        }
+
+        if(income.isChecked()){
+            url="http://192.168.1.9/Display.php";
+            keyword = "income";
+            Toast.makeText(context,"iNcome is selected",Toast.LENGTH_SHORT).show();
+            return keyword+";;"+url;
+        }
+        else{
+            Toast.makeText(context,"Please Select an option",Toast.LENGTH_SHORT).show();
+            return keyword+";;"+url;
+        }
+    }
 }

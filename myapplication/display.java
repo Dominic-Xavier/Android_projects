@@ -37,17 +37,27 @@ public class display extends AppCompatActivity {
         t1.setColumnStretchable(0, true);
         t1.setColumnStretchable(1, true);
         t1.setColumnStretchable(2, true);
-        Integer Amot;
+        Integer Amot = 0;
         TableLayout.LayoutParams Params = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
         Params.setMargins(0,0,20,0);
         try {
             JSONArray getResponse = new JSONArray(data);
+            String date="",Des="",Keyword="No";
             for (int k = 0; k < getResponse.length(); k++) {
                 TableRow row = new TableRow(display.this);
                 JSONObject jobj = getResponse.getJSONObject(k);
-                String date = jobj.getString("Date");
-                String Des = jobj.getString("Exp_Des");
-                Amot = jobj.getInt("Exp_Amt");
+                try{
+                    Keyword = jobj.getString("Inc_Des");
+                    date = jobj.getString("Date");
+                    Des = jobj.getString("Inc_Des");
+                    Amot = jobj.getInt("Inc_Amt");
+                }
+                catch (Exception jerror){
+                    date = jobj.getString("Date");
+                    Des = jobj.getString("Exp_Des");
+                    Amot = jobj.getInt("Exp_Amt");
+                }
+                System.out.println("Json String value:"+Keyword);
                 //Counting Total values
                 String col_name[] = {date, Des, Amot + ""};
                 for (String i : col_name) {

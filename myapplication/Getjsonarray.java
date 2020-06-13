@@ -1,5 +1,6 @@
 package com.myapp.finance;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -29,12 +30,12 @@ public class Getjsonarray extends AsyncTask<String,String,String> {
 
     String res;
     JSONArray jrr;
-    String urls;
+    String urls="";
 
 
     @Override
     protected String doInBackground(String... strings) {
-        String u="",User_id="",sdate="",edate="";
+        String u="",User_id="",sdate="",edate="",keyword="";
         u = strings[0];
         User_id = strings[1];
         try{
@@ -42,16 +43,19 @@ public class Getjsonarray extends AsyncTask<String,String,String> {
                 urls = u;
                 sdate = strings[2];
                 edate = strings[3];
+                keyword = strings[4];
             }
             else if(u.equals("http://192.168.1.9/User_details.php")) {
                 urls = u;
                 sdate = "Nothing";
                 edate = "Nothing";
+                keyword="Nothing";
             }
             else if(u.equals("http://192.168.1.9/Total_exp_inc.php")){
                 urls = u;
                 sdate = "Nothing";
                 edate = "Nothing";
+                keyword="Nothing";
             }
         URL url = new URL(urls);
         HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -63,7 +67,8 @@ public class Getjsonarray extends AsyncTask<String,String,String> {
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(ops,"UTF-8"));
         String data = URLEncoder.encode("User_id","UTF-8")+"="+URLEncoder.encode(User_id,"UTF-8")
                 +"&&"+URLEncoder.encode("sdate","UTF-8")+"="+URLEncoder.encode(sdate,"UTF-8")
-                +"&&"+URLEncoder.encode("edate","UTF-8")+"="+URLEncoder.encode(edate,"UTF-8");
+                +"&&"+URLEncoder.encode("edate","UTF-8")+"="+URLEncoder.encode(edate,"UTF-8")
+                +"&&"+URLEncoder.encode("keyword","UTF-8")+"="+URLEncoder.encode(keyword,"UTF-8");
         writer.write(data);
         writer.flush();
         writer.close();
@@ -116,6 +121,8 @@ public class Getjsonarray extends AsyncTask<String,String,String> {
                 intent_name.putExtra("Jsondata",s);
                 intent_name.setClass(context.getApplicationContext(),display.class);
                 context.startActivity(intent_name);
+                ((Activity)context).finish();
+                System.out.println("Jsondata:"+s);
                 break;
             }
             case "http://192.168.1.9/Total_exp_inc.php":{
@@ -123,6 +130,7 @@ public class Getjsonarray extends AsyncTask<String,String,String> {
                 intent_name.putExtra("Jsondata",s);
                 intent_name.setClass(context.getApplicationContext(),FlowTracker.class);
                 context.startActivity(intent_name);
+                System.out.println("Jsondata:"+s);
                 break;
             }
         }
