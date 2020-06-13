@@ -9,9 +9,12 @@
 
     <!--ToDO with spinner i.e drop down list-->
     <string-array name="Select">
-        <item >Select One</item>
+        <item>Select One</item>
         <item>Expense</item>
         <item>Income</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
 
