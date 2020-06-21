@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainFragment">
+        <activity android:name=".Database">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,7 +35,7 @@
             android:parentActivityName=".Database"/>
         <activity android:name=".FlowTracker"
             android:parentActivityName=".Database"/>
-        <activity android:name=".Database"
+        <activity android:name=".MainFragment"
             android:parentActivityName=".Database"/>
     </application>
 
