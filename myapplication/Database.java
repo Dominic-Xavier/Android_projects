@@ -17,7 +17,6 @@ import android.text.InputType;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -28,7 +27,6 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
@@ -92,6 +90,7 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
         spinner.setAdapter(adapter);
 
         spinner.setOnItemSelectedListener(this);
+        sql s = new sql(this);
 
 
         //This View Elements are part of AlertDialogue in display Button
@@ -103,16 +102,8 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
         t2 = findViewById(R.id.table_lay);
         TextView name = findViewById(R.id.user_name);
         TextView text = findViewById(R.id.date);
-        EditText str = new EditText(this);
-        EditText etr = new EditText(this);
-        str.setInputType(InputType.TYPE_CLASS_DATETIME);
-        etr.setInputType(InputType.TYPE_CLASS_DATETIME);
-        str.setGravity(Gravity.CENTER);
-        etr.setGravity(Gravity.CENTER);
-        str.setHint("DD-MM-YYYY");
-        etr.setHint("DD-MM-YYYY");
-        str.setHintTextColor(Color.GRAY);
-        etr.setHintTextColor(Color.GRAY);
+        EditText str = s.startDate();
+        EditText etr = s.endDate();
 
         final String datas = sql.getData("User_name", this);
         u_id = sql.getData("u_id", this);
@@ -124,14 +115,14 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
             @Override
             public void run() {
                 if (u_id == null || u_id == "") {
-                    finish();
                     startActivity(new Intent(Database.this, login.class));
+                    finish();
                 }
             }
         });
 
 
-        sql s = new sql(this);
+
         String date = s.date();
         text.setText("Date:" + date);
 
@@ -237,13 +228,11 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
                                         etr.setText("");
                                     }
                                     else if(Keyword[0].equals("Both")){
-                                        s.show("Sorry","This feature is comming soon","Ok");
-                                        str.setText("");
-                                        etr.setText("");
+                                        new Getjsonarray(Database.this).execute(Keyword[1], u_id, st_date, e_date);
                                     }
+                                    else if(Keyword[0].equals("expense") || Keyword[0].equals("income"))
+                                        new Getjsonarray(Database.this).execute(Keyword[1],u_id,st_date, e_date,Keyword[0]);
 
-                                    else
-                                        new Getjsonarray(Database.this).execute(Keyword[1], u_id, st_date, e_date, Keyword[0]);
                                 } else {
                                     s.show("Error", "Invalid format", "Ok");
                                     str.setText("");
@@ -311,7 +300,6 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
     }
 
     public EditText des() {
-
         EditText et1 = new EditText(Database.this);
         et1.setTextSize(15);
         et1.setGravity(Gravity.CENTER);

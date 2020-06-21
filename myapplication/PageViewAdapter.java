@@ -1,15 +1,29 @@
 package com.myapp.finance;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 public class PageViewAdapter extends FragmentPagerAdapter {
 
+    List<Fragment> fragmentList = new ArrayList<>();
+    List<String>fragmentTitle = new ArrayList<>();
+
     int noOfTabs;
+    String tab_names[] = new String[]{"Expense","Income"};
     public PageViewAdapter(FragmentManager fm, int noOfTabs) {
         super(fm);
         this.noOfTabs = noOfTabs;
+    }
+
+    @Nullable
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return fragmentTitle.get(position);
     }
 
     /**
@@ -17,16 +31,16 @@ public class PageViewAdapter extends FragmentPagerAdapter {
      *
      * @param position
      */
+
+
     @Override
     public Fragment getItem(int position) {
-        switch (position) {
-            case 0:
-                return new Expense();
-            case 1:
-                return new Income();
-            default:
-                return null;
-        }
+        return fragmentList.get(position);
+    }
+
+    public void addFragment(Fragment fragment,String Title){
+        fragmentList.add(fragment);
+        fragmentTitle.add(Title);
     }
 
     /**
@@ -34,6 +48,7 @@ public class PageViewAdapter extends FragmentPagerAdapter {
      */
     @Override
     public int getCount() {
-        return noOfTabs;
+        return fragmentList.size();
     }
+
 }

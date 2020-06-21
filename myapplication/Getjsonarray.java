@@ -39,23 +39,37 @@ public class Getjsonarray extends AsyncTask<String,String,String> {
         u = strings[0];
         User_id = strings[1];
         try{
-            if(u.equals("http://192.168.1.9/Display.php")){
-                urls = u;
-                sdate = strings[2];
-                edate = strings[3];
-                keyword = strings[4];
-            }
-            else if(u.equals("http://192.168.1.9/User_details.php")) {
-                urls = u;
-                sdate = "Nothing";
-                edate = "Nothing";
-                keyword="Nothing";
-            }
-            else if(u.equals("http://192.168.1.9/Total_exp_inc.php")){
-                urls = u;
-                sdate = "Nothing";
-                edate = "Nothing";
-                keyword="Nothing";
+            switch (u){
+                case "http://192.168.1.9/Display.php":{
+                    urls = u;
+                    sdate = strings[2];
+                    edate = strings[3];
+                    keyword = strings[4];
+                    break;
+                }
+                case "http://192.168.1.9/User_details.php":{
+                    urls = u;
+                    sdate = "Nothing";
+                    edate = "Nothing";
+                    keyword="Nothing";
+                    break;
+                }
+                case "http://192.168.1.9/Total_exp_inc.php":{
+                    urls = u;
+                    sdate = "Nothing";
+                    edate = "Nothing";
+                    keyword="Nothing";
+                    break;
+                }
+                case "http://192.168.1.9/Total_Data.php":{
+                    urls = u;
+                    sdate = strings[2];
+                    edate = strings[3];
+                    keyword="Nothing";
+                    break;
+                }
+                default:
+                    new sql(context).show("Error","No URL","Ok");
             }
         URL url = new URL(urls);
         HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -117,22 +131,32 @@ public class Getjsonarray extends AsyncTask<String,String,String> {
                 break;
             }
             case "http://192.168.1.9/Display.php":{
-                System.out.println("Jsondata:"+s);
-                intent_name.putExtra("Jsondata",s);
-                intent_name.setClass(context.getApplicationContext(),display.class);
-                context.startActivity(intent_name);
-                ((Activity)context).finish();
-                System.out.println("Jsondata:"+s);
-                break;
-            }
+                String Keyword = intent_name.getStringExtra("Keyword");
+                    intent_name.putExtra("Jsondata",s);
+                    intent_name.setClass(context.getApplicationContext(),display.class);
+                    context.startActivity(intent_name);
+                    ((Activity)context).finish();
+                    System.out.println("Jsondata:"+s);
+                    break;
+                }
             case "http://192.168.1.9/Total_exp_inc.php":{
-                System.out.println("Jsondata:"+s);
                 intent_name.putExtra("Jsondata",s);
                 intent_name.setClass(context.getApplicationContext(),FlowTracker.class);
                 context.startActivity(intent_name);
                 System.out.println("Jsondata:"+s);
                 break;
             }
+            case "http://192.168.1.9/Total_Data.php":{
+                System.out.println("Jsondata:"+s);
+                intent_name.putExtra("Jsondata",s);
+                intent_name.setClass(context.getApplicationContext(),MainFragment.class);
+                context.startActivity(intent_name);
+                ((Activity)context).finish();
+                break;
+            }
+            default:
+                new sql(context).show("Error","Error Occured","Ok");
+                break;
         }
     }
 }

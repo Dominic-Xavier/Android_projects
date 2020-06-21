@@ -7,13 +7,17 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.text.InputType;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -151,18 +155,22 @@ public class sql extends SQLiteOpenHelper {
     }
 
 
+    @SuppressLint("ResourceType")
     public CheckBox iNcome(){
         CheckBox income = new CheckBox(context);
         income.setText("Income");
         income.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+        income.setId(2);
         return income;
     }
 
 
+    @SuppressLint("ResourceType")
     public CheckBox eXpense(){
         CheckBox expense = new CheckBox(context);
         expense.setText("Expense");
         expense.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+        expense.setId(1);
         return expense;
     }
 
@@ -173,7 +181,7 @@ public class sql extends SQLiteOpenHelper {
 
         String url="-",keyword="-";
         if(expense.isChecked() && income.isChecked()){
-            url="http://192.168.1.9/Total_exp_inc.php";
+            url="http://192.168.1.9/Total_Data.php";
             keyword = "Both";
             return keyword+";;"+url;
         }
@@ -195,5 +203,23 @@ public class sql extends SQLiteOpenHelper {
             Toast.makeText(context,"Please Select an option",Toast.LENGTH_SHORT).show();
             return keyword+";;"+url;
         }
+    }
+
+    public EditText startDate(){
+        EditText start = new EditText(context);
+        start.setInputType(InputType.TYPE_CLASS_DATETIME);
+        start.setGravity(Gravity.CENTER);
+        start.setHint("DD-MM-YYYY");
+        start.setHintTextColor(Color.GRAY);
+        return  start;
+    }
+
+    public EditText endDate(){
+        EditText end = new EditText(context);
+        end.setInputType(InputType.TYPE_CLASS_DATETIME);
+        end.setGravity(Gravity.CENTER);
+        end.setHint("DD-MM-YYYY");
+        end.setHintTextColor(Color.GRAY);
+        return  end;
     }
 }

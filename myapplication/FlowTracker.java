@@ -69,6 +69,7 @@ public class FlowTracker extends AppCompatActivity implements RecyclerBaseAdapte
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         close.setOnClickListener((v)-> {
+            startActivity(new Intent(FlowTracker.this,Database.class));
                 finish();
         });
     }
