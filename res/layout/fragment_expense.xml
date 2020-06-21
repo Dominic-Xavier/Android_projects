@@ -18,7 +18,7 @@
         app:layout_constraintTop_toBottomOf="@+id/include">
 
         <TableLayout
-            android:id="@+id/tbl_lay"
+            android:id="@+id/table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:stretchColumns="*">
@@ -65,7 +65,7 @@
             android:layout_height="match_parent">
 
             <TableLayout
-                android:id="@+id/tbl"
+                android:id="@+id/total_expense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -73,21 +73,5 @@
         </ScrollView>
 
     </LinearLayout>
-
-    <Button
-        android:id="@+id/cl"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="61dp"
-        android:text="Close"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <include
-        android:id="@+id/include"
-        layout="@layout/tool_bars"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
