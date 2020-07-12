@@ -46,10 +46,22 @@
 	
 	
 	function query($Keyword,$table_name,$start_date,$end_date){
-		if($Keyword == "expense")
-			$sql = "select Date,Exp_Des,Exp_Amt from $table_name where Date between '$start_date' and '$end_date'";
-		else if($Keyword == "income")
-			$sql = "select Date,Inc_Des,Inc_Amt from $table_name where Date between '$start_date' and '$end_date'";
+		switch($Keyword){
+			case "expense":
+				$sql = "select Date,Exp_Des,Exp_Amt from $table_name where Date between '$start_date' and '$end_date'";
+			break;
+			
+			case "income":
+				$sql = "select Date,Inc_Des,Inc_Amt from $table_name where Date between '$start_date' and '$end_date'";
+			break;
+			
+			case "Both":
+				$sql = "select * from $table_name where Date between '$start_date' and '$end_date'";
+			break;
+			
+			default:
+				$sql = "incorrect keyword";
+		}
 		
 		return $sql;
 	}

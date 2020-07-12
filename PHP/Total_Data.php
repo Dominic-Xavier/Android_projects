@@ -3,7 +3,7 @@
 	if($_SERVER['REQUEST_METHOD']=="POST"){
 		require('conn.php');
 		global $connection;
-		if(!empty($_POST['User_id']) && !empty($_POST['sdate'] && !empty($_POST['edate'])))
+		if(!empty($_POST['User_id']) && !empty($_POST['sdate']) && !empty($_POST['edate']) && !empty($_POST['keyword']))
 			Total_Expense_Income_MonthWise($connection,$_POST['User_id'],$_POST['sdate'],$_POST['edate']);
 		else
 			echo "Blank";

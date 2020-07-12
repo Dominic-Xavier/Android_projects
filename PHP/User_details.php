@@ -2,7 +2,7 @@
 	
 	require('conn.php');
 	global $connection;
-	if(!empty($_POST['User_id']) && !empty($_POST['sdate']) && !empty($_POST['edate'])){
+	if(!empty($_POST['User_id']) && !empty($_POST['sdate']) && !empty($_POST['edate']) && !empty($_POST['keyword'])){
 		//here $_POST['sdate'] && $_POST['edate'] is dummy variable.
 		$u_id = $_POST['User_id'];
 		user_details($u_id,$connection);

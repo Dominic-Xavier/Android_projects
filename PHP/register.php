@@ -11,7 +11,7 @@ else{
 
 function register()
 {
-	global $connection;
+	global $connection,$uid;
 
 	$count1 = $count = 0;
 	
@@ -25,12 +25,12 @@ function register()
 	
 	if($res = mysqli_query($connection,$query2)){
 		$count = mysqli_num_rows($res)+1;
-		global $uid;
+		
 		$uid = "u_id_".$count;
 	}
 	
 	$query = "insert into login(id,Username,Password,Mobile_Number) values('$uid','$username','$password','$Mobile_Number')";//used to store user's login credential
-	$sql= "create table $uid(Date date, Exp_Des text(5000),Exp_Amt int(10),Inc_Des text(5000),Inc_Amt int(10))";
+	$sql= "create table $uid(Date date, Exp_Des text(5000),Exp_Amt int(10),Inc_Des text(5000),Inc_Amt int(10))";//Used to store user information
 		while($row = mysqli_fetch_assoc($res)){
 		$dbusername = $row['Username'];
 		if($username == $dbusername){
@@ -39,8 +39,8 @@ function register()
 			}
 		}
 		if($count1==0){
-			if(mysqli_query($connection,$sql)){ // Inserting values into database
-				if(mysqli_query($connection,$query)){// Creating Table for users
+			if(mysqli_query($connection,$sql)){ // Creating Table for users
+				if(mysqli_query($connection,$query)){// Inserting values into database
 					echo "Registered Successfully";
 				}
 			}         
@@ -52,8 +52,9 @@ function register()
 			echo"Failure".mysqli_error($connection);
 		}
 		$count1 = 0;
-	mysqli_close($connection);
 	}
+	
+	mysqli_close($connection);
 }
 
 ?>
