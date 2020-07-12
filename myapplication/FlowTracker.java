@@ -83,6 +83,5 @@ public class FlowTracker extends AppCompatActivity implements RecyclerBaseAdapte
     public void onClickView(int position) {
         years.get(position);
         months.get(position);
-        
     }
 }

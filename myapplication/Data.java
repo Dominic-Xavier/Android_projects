@@ -1,5 +1,6 @@
 package com.myapp.finance;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import org.json.JSONObject;
@@ -18,6 +19,7 @@ import java.net.URLEncoder;
 public class Data extends AsyncTask<String,Void,String> {
     String result;
     Context context;
+    ProgressDialog dialog;
     public Data(Context context) throws IOException {
         this.context = context;
     }
@@ -33,10 +35,15 @@ public class Data extends AsyncTask<String,Void,String> {
     StringBuffer add;
 
     @Override
+    protected void onPreExecute() {
+        dialog = new sql(context).loading("Processing...!","show");
+    }
+
+    @Override
     protected String doInBackground(String... strings) {
         try{
             String keyword = strings[0];// To tell the server weather it is income or expense
-            final String ip = "http://192.168.1.9:80/data.php";
+            final String ip = "http://192.168.1.12:80/data.php";
 
             System.out.println("keyword:"+keyword);
 
@@ -86,6 +93,7 @@ public class Data extends AsyncTask<String,Void,String> {
 
     @Override
     protected void onPostExecute(String s){
+        dialog.dismiss();
         if(s.contains("values inserted")) {
             new sql(context).show("Success","Values inserted Successfully","Ok");
         }

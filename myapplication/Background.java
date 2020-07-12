@@ -53,12 +53,12 @@ public class Background extends AsyncTask <String, Void,String> {
 
         try {
 
-                if(connstr.equals("http://192.168.1.9/login.php"))
+                if(connstr.equals("http://192.168.1.12/login.php"))
                 {
                     u = connstr;
                     Mobile_no = "This is a blank variable";
                 }
-                else if(connstr.equals("http://192.168.1.9/register.php"))
+                else if(connstr.equals("http://192.168.1.12/register.php"))
                 {
                     u = connstr;
                     Mobile_no = voids[3];

@@ -33,14 +33,14 @@ public class Register extends AppCompatActivity {
             s4 = t4.getText().toString();
             int phone_number = s4.length();
 
-                if (!s2.equals(s3) || s1.isEmpty() || s2.isEmpty() || s3.isEmpty() || s4.isEmpty() || phone_number!=10) {
+                if (!s2.equals(s3) || s1.isEmpty() || s2.isEmpty() || s3.isEmpty() || s4.isEmpty() && phone_number==10) {
                     new sql(this).show("Error","Password Mismatch or empty values or Invalid number","Ok");
                     t1.setText("");
                     t2.setText("");
                     t3.setText("");
                     t4.setText("");
                 } else {
-                    String url = "http://192.168.1.9/register.php";
+                    String url = "http://192.168.1.12/register.php";
                     new Background(this).execute(s1,s2,url,s4);
                 }
         });

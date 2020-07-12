@@ -2,13 +2,17 @@ package com.myapp.finance;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.ImageDecoder;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.InputType;
@@ -19,9 +23,12 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
@@ -30,6 +37,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
+import java.util.Random;
 
 import androidx.annotation.RequiresApi;
 
@@ -37,6 +45,13 @@ public class sql extends SQLiteOpenHelper {
 
     Context context;
     static SharedPreferences preferences;
+    AlertDialog dialog;
+    Uri image;
+
+    public sql(Context context) {
+        super(context, "database.db", null, 1);
+        this.context = context;
+    }
 
     public static void setData(String Key,String value,Context context){
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -49,8 +64,12 @@ public class sql extends SQLiteOpenHelper {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         if(key.equals("User_name"))
             return preferences.getString("User_name",null);
-        else
+        else if(key.equals("u_id"))
             return preferences.getString("u_id",null);
+        else if(key.equals("Profile_Pic"))
+            return preferences.getString("Profile_Pic",null);
+        else
+            return null;
     }
 
     public static void delete_data(Context context){
@@ -61,44 +80,31 @@ public class sql extends SQLiteOpenHelper {
         edit.commit();
     }
 
-    public sql(Context context) {
-        super(context, "database.db", null, 1);
-        this.context = context;
-    }
-
-    AlertDialog dialog;
-
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table log (username text primary key,Password text NOT NULL)");
-        db.execSQL("create table data (Slno INTEGER primary key autoincrement,Date date NOT NULL,Description text NOT NULL,Amount INTEGER NOT NULL)");
+        db.execSQL("create table data (directory_name text NOT NULL,file_name text NOT NULL,Path text NOT NULL)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("drop table if exists log");
         db.execSQL("drop table if exists data");
         onCreate(db);
     }
 
-    public Boolean insert(String date, List srr, List amt) {
-        Boolean b=false;
+    public Boolean image_Details(String directory_Name,String file_Name,String path) {
         SQLiteDatabase s = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        ListIterator l1 = srr.listIterator();
-        ListIterator l2 = amt.listIterator();
+
         long row = 0;
-        while(l1.hasNext() && l2.hasNext()){
-            cv.put("Date", date);
-            cv.put("Description", String.valueOf(l1.next()));
-            cv.put("Amount", String.valueOf(l2.next()));
+            cv.put("directory_Name", directory_Name);
+            cv.put("file_Name", file_Name);
+            cv.put("Path",path);
 
             row = s.insert("data", null, cv);
 
-        }
-        if (row == -1)
-            return false;
-        else
-            return true;
+            if (row == -1)
+                return false;
+            else
+                return true;
     }
 
     public String date(){
@@ -155,22 +161,20 @@ public class sql extends SQLiteOpenHelper {
     }
 
 
-    @SuppressLint("ResourceType")
     public CheckBox iNcome(){
         CheckBox income = new CheckBox(context);
         income.setText("Income");
         income.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
-        income.setId(2);
+        income.setId(R.id.income_check_box);
         return income;
     }
 
 
-    @SuppressLint("ResourceType")
     public CheckBox eXpense(){
         CheckBox expense = new CheckBox(context);
         expense.setText("Expense");
         expense.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
-        expense.setId(1);
+        expense.setId(R.id.expense_check_box);
         return expense;
     }
 
@@ -181,20 +185,20 @@ public class sql extends SQLiteOpenHelper {
 
         String url="-",keyword="-";
         if(expense.isChecked() && income.isChecked()){
-            url="http://192.168.1.9/Total_Data.php";
+            url="http://192.168.1.12/Total_Data.php";
             keyword = "Both";
             return keyword+";;"+url;
         }
 
         if(expense.isChecked()){
-            url="http://192.168.1.9/Display.php";
+            url="http://192.168.1.12/Display.php";
             keyword = "expense";
             Toast.makeText(context,"eXpense is selected",Toast.LENGTH_SHORT).show();
             return keyword+";;"+url;
         }
 
         if(income.isChecked()){
-            url="http://192.168.1.9/Display.php";
+            url="http://192.168.1.12/Display.php";
             keyword = "income";
             Toast.makeText(context,"iNcome is selected",Toast.LENGTH_SHORT).show();
             return keyword+";;"+url;
@@ -205,21 +209,41 @@ public class sql extends SQLiteOpenHelper {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public EditText startDate(){
         EditText start = new EditText(context);
         start.setInputType(InputType.TYPE_CLASS_DATETIME);
         start.setGravity(Gravity.CENTER);
         start.setHint("DD-MM-YYYY");
         start.setHintTextColor(Color.GRAY);
-        return  start;
+        start.setId(R.id.start_date);
+        return start;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public EditText endDate(){
         EditText end = new EditText(context);
         end.setInputType(InputType.TYPE_CLASS_DATETIME);
         end.setGravity(Gravity.CENTER);
         end.setHint("DD-MM-YYYY");
         end.setHintTextColor(Color.GRAY);
-        return  end;
+        end.setId(R.id.end_date);
+        return end;
     }
+
+    public ProgressDialog loading(String title,String KEYWORD){
+        ProgressDialog dialog = new ProgressDialog(context,android.R.attr.progressBarStyle);
+        dialog.setContentView(new ProgressBar(context));
+        dialog.setTitle(title);
+        dialog.setCancelable(false);
+        dialog.getWindow().setGravity(Gravity.CENTER);
+        dialog.setCanceledOnTouchOutside(false);
+        if(KEYWORD.equals("show"))
+            dialog.show();
+        else
+            dialog.dismiss();
+        return dialog;
+    }
+
 }
+

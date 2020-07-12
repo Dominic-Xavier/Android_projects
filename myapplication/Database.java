@@ -1,6 +1,7 @@
 package com.myapp.finance;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -34,8 +37,21 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.material.navigation.NavigationView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -263,9 +279,6 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-        }
         if (action.onOptionsItemSelected(item))
             return true;
         return super.onOptionsItemSelected(item);
@@ -302,6 +315,7 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
     public EditText des() {
         EditText et1 = new EditText(Database.this);
         et1.setTextSize(15);
+        et1.setId(R.id.Description);
         et1.setGravity(Gravity.CENTER);
         et1.setMaxWidth(et1.getWidth());
         et1.setLayoutParams(Params(40,5,5,5));
@@ -312,6 +326,7 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
     public EditText amt() {
         EditText et2 = new EditText(Database.this);
         et2.setTextSize(15);
+        et2.setId(R.id.Amount);
         et2.setGravity(Gravity.CENTER);
         et2.setInputType(InputType.TYPE_CLASS_NUMBER);
         et2.setMaxWidth(et2.getWidth());
@@ -403,15 +418,13 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
                 logout();
                 break;
             case R.id.my_account: {
-                String url = "http://192.168.1.9/User_details.php";
+                String url = "http://192.168.1.12/User_details.php";
                 new Getjsonarray(this).execute(url,u_id);
-                finish();
                 break;
             }
             case R.id.expense:{
-                final String ip = "http://192.168.1.9/Total_exp_inc.php";
+                final String ip = "http://192.168.1.12/Total_exp_inc.php";
                 new Getjsonarray(this).execute(ip,u_id);
-                finish();
                 break;
             }
         }
@@ -448,5 +461,6 @@ public class Database extends AppCompatActivity implements View.OnClickListener,
     public void onNothingSelected(AdapterView<?> parent) {
         new sql(this).show("Error","Please select one option","Ok");
     }
+
 }
 

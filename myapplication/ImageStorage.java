@@ -3,18 +3,23 @@ package com.myapp.finance;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
+import android.os.Build;
 import android.os.Environment;
 
 import java.io.File;
 import java.io.FileOutputStream;
 
+import androidx.annotation.RequiresApi;
+
 public class ImageStorage  {
+
+    String filename;
 
     public static String saveInternalStorage(Context context,Bitmap bitmap,String directory_name, String filename) {
 
+        sql.setData("Profile_Pic",filename +".jpg",context);
+
         String stored = "Sorry the image already exists";
-        String a = "/data/data/com.myapp.finance/files/Xavier";
 
         File sdcard = context.getFilesDir();
 
@@ -23,7 +28,6 @@ public class ImageStorage  {
         folder.mkdir();
         File file = new File(folder.getAbsoluteFile(), filename + ".jpg");
 
-        sql.setData("Profile_Pic",filename +".jpg",context);
 
         if (file.exists())
             return stored ;
@@ -40,11 +44,11 @@ public class ImageStorage  {
         return stored;
     }
 
-    public static File getImage(Context context,String imagename,String directory_name) {
+    public static File getImage(Context context,String directory_name,String imagename ) {
 
         File mediaImage = null;
         try {
-            String root = context.getFilesDir().toString();
+            String root = Environment.getExternalStorageDirectory().getPath()+"/Financial Manager/"+directory_name;
             File myDir = new File(root);
             if (!myDir.exists())
                 return mediaImage;
@@ -55,37 +59,31 @@ public class ImageStorage  {
         }
         return mediaImage;
     }
-    public static boolean checkifImageExists(Context context,String imagename,String directory_name)
-    {
-        Bitmap b = null ;
-        File file = ImageStorage.getImage(context,"/"+imagename+".jpg",directory_name);
-        String path = file.getAbsolutePath();
 
-        if (path != null)
-            b = BitmapFactory.decodeFile(path);
 
-        if(b == null ||  b.equals(""))
-        {
-            return false;
-        }
-        return true ;
-    }
+    public static String profilePic(Context context, Bitmap bitmap, String directory_name, String filename){
+        String result = "Failed";
 
-    public String profilePic(Context context,Bitmap bitmap,String directory_name, String filename){
-        String result = "failed";
-        File profile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)+File.separator+"Financial Manager");
-        if(!profile.exists())
-            profile.mkdir();
+            String path = Environment.getExternalStorageDirectory().getPath()+"/Financial Manager/"+directory_name;
+            new sql(context).show("File path","Absolute path is:"+path,"ok");
+            File profile = new File(path);
+            if(!profile.exists())
+                profile.mkdir();
 
-        try {
-            FileOutputStream out = new FileOutputStream(profile);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            out.flush();
-            out.close();
-            result = "success";
-        } catch (Exception e) {
-            new sql(context).show("Error",e.toString(),"ok");
-        }
+            File pic = new File(profile.getAbsoluteFile(),filename+".jpg");
+            sql.setData("Profile_Pic",filename+".jpg",context);
+            if(pic.exists())
+                pic.delete();
+
+            try {
+                FileOutputStream out = new FileOutputStream(pic);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                out.flush();
+                out.close();
+                result = "success";
+            } catch (Exception e) {
+                new sql(context).show("Error",e.toString(),"ok");
+            }
         return result;
     }
 }
